@@ -1,0 +1,164 @@
+<div class="app">
+    <div class="wrapper-answer">
+        <div id="cau1" class="danhmuc">
+            <h3>1. Danh sách các thiết bị trong phòng thí nghiệm, nhóm theo chủng loại</h3>
+                <script>
+                    axios.get('http://localhost:3000/tools')
+                        .then(function (response) {
+                            response.data.map(function (item, index) {
+                                var html = `
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">${index + 1}</th>
+                                            <td>${item.TenTB}</td>
+                                            <td>${item.TenLoai}</td>
+                                        </tr>
+                                        /tbody>
+                                `;
+                                document.getElementById('table-1').innerHTML += html;
+                                })
+                            }
+                        )
+                        .catch(function (error) {
+                            console.log(error)
+                        })
+                        </script>
+            <table class="table table-bordered" id="table-1">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tên thiết bị</th>
+                        <th scope="col">Chủng loại</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div id="cau2" class="danhmuc">
+            <h3>2. Danh sách các thiết bị đang được mượn sắp tới hạn trả (trước 05 ngày)</h3>
+            <script>
+                axios.get('http://localhost:3000/borrowedTools')
+                    .then(function (response) {
+                        //console.log(response)
+                        response.data.map(function (item, index) {
+                            //console.log(item);
+                            var html = `
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">${index + 1}</th>
+                                        <td>${item.TenTB}</td>
+                                        <td>${item.TenGV}</td>
+                                        <td>${item.HanTra}</td>
+                                    </tr>
+                                </tbody>
+                            `;
+                            document.getElementById('table-2').innerHTML += html;
+                        })
+                    }
+                )
+                .catch(function (error) {
+                    console.log(error)
+                })
+        </script>
+        <table class="table table-bordered" id="table-2">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Tên thiết bị</th>
+                    <th scope="col">Tên giáo viên mượn</th>
+                    <th scope="col">Hạn trả</th>
+                </tr>
+            </thead>
+        </table>
+        </div>
+        <div id="cau3" class="danhmuc">
+            <h3>3. Danh sách các thiết bị đã quá hạn trả</h3>
+            <script>
+                axios.get('http://localhost:3000/outdateTools')
+                    .then(function (response) {
+                        //console.log(response)
+                        response.data.map(function (item, index) {
+                            //console.log(item);
+                            var html = `
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">${index + 1}</th>
+                                        <td>${item.TenGV}</td>
+                                        <td>${item.TenTB}</td>
+                                        <td>${item.HanTra}</td>
+                                    </tr>
+                                </tbody>
+                            `;
+                            document.getElementById('table-3').innerHTML += html;
+                        })
+                    }
+                )
+                    .catch(function (error) {
+                        console.log(error)
+                    })
+            </script>
+            <table class="table table-bordered" id="table-3">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tên giáo viên mượn</th>
+                        <th scope="col">Tên thiết bị</th>
+                        <th scope="col">Hạn trả</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div id="cau4" class="danhmuc">
+            <h3>4. Danh sách các bài thí nghiệm của giáo viên theo ID của giáo viên đó</h3>
+            <form>
+                <div class="form-group">
+                    <label for="id_gv">Nhập ID Giáo viên</label>
+                    <input type="text" class="form-control" value="" id="id_gv">
+                </div>
+                <button id="btn-submit" type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            <script>
+                document.getElementById('btn-submit').addEventListener("click", function(e) {
+                    e.preventDefault();
+                    const id = document.getElementById('id_gv').value
+                        axios.get(`http://localhost:3000/labtestID/${id}`)
+                            .then(function (response) {
+                                console.log(response)
+                                response.data.data.map(function (item, index) {
+                                    //console.log(item);
+                                    var html = `
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Tên giáo viên mượn</th>
+                                                <th scope="col">Tên bài thí nghiệm</th>
+                                            </tr>
+                                        </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row">${index + 1}</th>
+                                                    <td>${item.TenGV}</td>
+                                                    <td>${item.TenBTN}</td>
+                                                </tr>
+                                            </tbody>
+                                    `;
+                                    document.getElementById('table-4').innerHTML = html;
+                                })
+                            })
+                            .catch(function (error) {
+                                console.log(error)
+                            })
+                })
+            </script>
+            <table class="table table-bordered" id="table-4">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tên giáo viên mượn</th>
+                        <th scope="col">Tên bài thí nghiệm</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    {{> sidebar}}
+</div>
